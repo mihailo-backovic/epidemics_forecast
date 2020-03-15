@@ -1,9 +1,0 @@
-README.md
-setup.py
-EpidemicForecaster/__init__.py
-EpidemicForecaster/forecast_model.py
-epidemics_forecaster.egg-info/PKG-INFO
-epidemics_forecaster.egg-info/SOURCES.txt
-epidemics_forecaster.egg-info/dependency_links.txt
-epidemics_forecaster.egg-info/requires.txt
-epidemics_forecaster.egg-info/top_level.txt
