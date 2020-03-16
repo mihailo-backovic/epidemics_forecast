@@ -4,6 +4,7 @@ from scipy.optimize import curve_fit
 import numpy as np
 
 from sympy import symbols, lambdify, diff, exp
+from sympy.solvers import solve
 
 class SISForecaster:
 
@@ -25,12 +26,19 @@ class SISForecaster:
         da = diff(model, a)
         db = diff(model, b)
         dc = diff(model, c)
+        inflection_pt = solve(
+            diff(model, x, 2),
+            x
+        ) 
 
         # These are python functions!
         self.model = lambdify([x, a, b, c], model, 'numpy')
         self._da_f = lambdify([x, a, b, c], da, 'numpy')
         self._db_f = lambdify([x, a, b, c], db, 'numpy')
         self._dc_f = lambdify([x, a, b, c], dc, 'numpy')
+        self._inflection_point = lambdify([a, b, c], inflection_pt, 'numpy')
+
+        self._inflection_pt_formula = inflection_pt
 
         # To be set by fit.
         self._fit_params = None
@@ -98,6 +106,19 @@ class SISForecaster:
             + 2*self._da_f(x, p[0], p[1], p[2])*self._db_f(x, p[0], p[1], p[2])*p_cov[0, 1]
             + 2*self._da_f(x, p[0], p[1], p[2])*self._dc_f(x, p[0], p[1], p[2])*p_cov[0, 2]
             + 2*self._db_f(x, p[0], p[1], p[2])*self._dc_f(x, p[0], p[1], p[2])*p_cov[1, 2]
+        )
+
+    def inflection_point(self):
+        if self._fit_params is None:
+            raise AttributeError('You have to call fit first!')
+        
+        return np.round(
+            self._inflection_point(
+                self._fit_params[0],
+                self._fit_params[1],
+                self._fit_params[2],
+            )[0],
+            1
         )
 
     def plot(
