@@ -9,3 +9,7 @@ Then type:
 
 Voila! 
 
+# Data
+
+Data was manually taken from Wikipedia. 
+No guarantees of accuracy whatsoever!
